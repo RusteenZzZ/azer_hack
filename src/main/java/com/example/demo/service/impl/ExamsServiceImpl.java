@@ -256,6 +256,21 @@ public class ExamsServiceImpl implements ExamsService {
 
             score = (score/coeffs) * 100F;
 
+            Exams exam = this.examsRepo.getById(usersExam.getExam().getId());
+            Float prevAverageScore = exam.getAverageScore();
+            Float prevRating = exam.getRate();
+
+            exam.setAverageScore(
+                    (prevAverageScore * exam.getNumOfParticipated() + score)
+                            /(exam.getNumOfParticipated() + 1)
+            );
+            exam.setRate(
+                    (prevRating * exam.getNumOfParticipated() + examSubmission.getRating())
+                            /(exam.getNumOfParticipated() + 1)
+            );
+
+            this.examsRepo.save(exam);
+
             usersExam.setScore(score);
             usersExam.setRating(examSubmission.getRating());
             usersExam.setStatus(ExamStatus.FINISHED);
