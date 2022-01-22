@@ -16,10 +16,33 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepo usersRepo;
 
     @Override
+    public Object getUserByToken(GetUserByToken getUserByToken) {
+        try {
+            Users user = this.usersRepo.findByToken(getUserByToken.getToken());
+            if(user == null) {
+                System.out.println(
+                        String.format("Could not find user with such %s token", getUserByToken.getToken())
+                );
+                return new Error(
+                        String.format("Could not find user with such %s token", getUserByToken.getToken())
+                );
+            } else {
+                return new User(
+                        user.getId(),
+                        user.getName(),
+                        user.getEmail()
+                );
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Error(e.toString());
+        }
+    }
+
+    @Override
     public Object loginUser(Login login) {
 
         String token = null;
-        System.out.println("------------------");
         try{
             Users user = usersRepo.findByEmail(login.getEmail());
             System.out.println(user);
@@ -28,10 +51,21 @@ public class UsersServiceImpl implements UsersService {
                 token = jwtToken.getJWTToken(login.getEmail());
                 user.setToken(token);
                 this.usersRepo.save(user);
-                return new LoginSuccess(token);
+                return new LoginSuccess(
+                        token,
+                        new User(
+                                user.getId(),
+                                user.getName(),
+                                user.getEmail()
+                        )
+                );
             }
-            System.out.println(String.format("Could not find user with email %s", login.getEmail()));
-            return new Error(String.format("Could not find user with email %s", login.getEmail()));
+            System.out.println(
+                    String.format("Could not find user with email %s", login.getEmail())
+            );
+            return new Error(
+                    String.format("Could not find user with email %s", login.getEmail())
+            );
 
         } catch (Exception e){
             System.out.println(e);

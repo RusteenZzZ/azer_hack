@@ -1,8 +1,6 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.Login;
-import com.example.demo.dto.Logout;
-import com.example.demo.dto.Register;
+import com.example.demo.dto.*;
 import com.example.demo.service.impl.UsersServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +24,13 @@ public class UsersController {
     public String home(){
         System.out.println("TET");
         return "HELLO";
+    }
+
+    @GetMapping("/getUser")
+    public Object getUserByToken(@RequestBody GetUserByToken getUserByToken) {
+        Object res = this.usersService.getUserByToken(getUserByToken);
+
+        return res;
     }
 
     @PostMapping("/login")

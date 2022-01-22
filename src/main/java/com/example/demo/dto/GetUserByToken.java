@@ -9,7 +9,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LoginSuccess {
+public class GetUserByToken {
     private String token;
-    private User user;
 }

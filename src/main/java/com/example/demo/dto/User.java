@@ -9,7 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class LoginSuccess {
-    private String token;
-    private User user;
+public class User {
+    private Long id;
+    private String name;
+    private String email;
 }
