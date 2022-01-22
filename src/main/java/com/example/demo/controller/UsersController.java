@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import com.example.demo.dto.*;
 import com.example.demo.service.impl.UsersServiceImpl;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,11 +12,7 @@ import org.springframework.web.bind.annotation.*;
 public class UsersController {
 
     private final UsersServiceImpl usersService;
-
-    @Bean
-    public PasswordEncoder encoder() {
-        return new BCryptPasswordEncoder();
-    }
+    private final PasswordEncoder passwordEncoder;
 
     @GetMapping("/")
     public String home(){
@@ -27,8 +21,8 @@ public class UsersController {
     }
 
     @GetMapping("/getUser")
-    public Object getUserByToken(@RequestBody GetUserByToken getUserByToken) {
-        Object res = this.usersService.getUserByToken(getUserByToken);
+    public Object getUserByToken(@RequestHeader("Authorization") String token) {
+        Object res = this.usersService.getUserByToken(new GetUserByToken(token));
 
         return res;
     }
@@ -43,7 +37,7 @@ public class UsersController {
     @PostMapping("/register")
     public Object register(@RequestBody Register register) {
 
-        register.setPassword(encoder().encode(register.getPassword()));
+        register.setPassword(passwordEncoder.encode(register.getPassword()));
 
         Object res = this.usersService.registerUser(register);
 

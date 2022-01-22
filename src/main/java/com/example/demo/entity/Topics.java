@@ -23,4 +23,8 @@ public class Topics {
     private Set<Exams> exams = new HashSet<>();
     @OneToMany(mappedBy = "topic")
     private Set<Categories> categories = new HashSet<>();
+
+    public Topics(String title) {
+        this.title = title;
+    }
 }
