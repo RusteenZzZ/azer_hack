@@ -19,13 +19,15 @@ public class Categories {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
+    private String suggestion;
     @ManyToOne()
     private Topics topic;
     @OneToMany(mappedBy = "category")
     private Set<Questions> questions = new HashSet<>();
 
-    public Categories(String title, Topics topic) {
+    public Categories(String title, Topics topic, String suggestion) {
         this.title = title;
         this.topic = topic;
+        this.suggestion = suggestion;
     }
 }

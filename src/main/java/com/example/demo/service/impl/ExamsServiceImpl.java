@@ -37,9 +37,10 @@ public class ExamsServiceImpl implements ExamsService {
                             exam.getAverageScore(),
                             exam.getDescription(),
                             exam.getDifficulty().toString(),
-                            exam.getTopic().getTitle()
+                            exam.getTopic().getTitle(),
+                            exam.getIsPublic()
                     ))
-                    .collect(Collectors.toList());;
+                    .collect(Collectors.toList());
 
             return filteredDtoExams;
         } catch (Exception e) {

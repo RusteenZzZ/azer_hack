@@ -36,6 +36,7 @@ public class Exams {
     private Topics topic;
     @OneToMany(mappedBy = "exam")
     private Set<UsersExams> studentExams = new HashSet<>();
+    private Boolean isPublic;
 
     public Exams(String title,
                  Integer numOfQuestions,
@@ -44,7 +45,8 @@ public class Exams {
                  Float averageScore,
                  String description,
                  ExamDifficulty difficulty,
-                 Topics topic) {
+                 Topics topic,
+                 Boolean isPublic) {
         this.title = title;
         this.numOfQuestions = numOfQuestions;
         this.numOfParticipated = numOfParticipated;
@@ -53,5 +55,6 @@ public class Exams {
         this.description = description;
         this.difficulty = difficulty;
         this.topic = topic;
+        this.isPublic = isPublic;
     }
 }

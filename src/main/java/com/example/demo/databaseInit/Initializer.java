@@ -24,9 +24,9 @@ public class Initializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Users user1 = new Users(
-                "robert",
-                "robert@gmail.com",
-                passwordEncoder.encode("password")
+                "kamil",
+                "kamil@email.com",
+                passwordEncoder.encode("1231231")
         );
         this.usersRepo.save(user1);
 
@@ -47,7 +47,8 @@ public class Initializer implements CommandLineRunner {
                 2.5F,
                 "You will not pass this exam",
                 ExamDifficulty.HIGH,
-                topic1
+                topic1,
+                true
         );
         Exams exam2 = new Exams(
                 "Python basics",
@@ -57,34 +58,41 @@ public class Initializer implements CommandLineRunner {
                 3.0F,
                 "Go ahead!",
                 ExamDifficulty.LOW,
-                topic2
+                topic2,
+                false
         );
         this.examsRepo.save(exam1);
         this.examsRepo.save(exam2);
 
         Categories category1 = new Categories(
                 "Python data types",
-                topic2
+                topic2,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         Categories category2 = new Categories(
                 "Python tuples",
-                topic2
+                topic2,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         Categories category3 = new Categories(
                 "Python functions",
-                topic2
+                topic2,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         Categories category4 = new Categories(
                 "C data types",
-                topic1
+                topic1,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         Categories category5 = new Categories(
                 "C arrays",
-                topic1
+                topic1,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         Categories category6 = new Categories(
                 "C functions",
-                topic1
+                topic1,
+                "Lorem Ipsum is simply dummy text of the printing and typesetting industry."
         );
         this.categoriesRepo.save(category1);
         this.categoriesRepo.save(category2);

@@ -19,4 +19,5 @@ public class Exam {
     private String difficulty;
     private String description;
     private String topicTitle;
+    private Boolean isPublic;
 }
