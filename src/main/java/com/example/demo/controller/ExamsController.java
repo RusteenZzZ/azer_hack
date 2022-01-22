@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.ErrorMessage;
 import com.example.demo.dto.ExamSubmission;
 import com.example.demo.service.impl.ExamsServiceImpl;
 import lombok.AllArgsConstructor;
@@ -43,7 +44,7 @@ public class ExamsController {
     ) {
         String[] strings = token.split(" ");
         if(strings.length != 2) {
-            return new Error("Wrong authorization header structure!!!");
+            return new ErrorMessage("Wrong authorization header structure!!!");
         }
         Object res = this.examsService.assignExamToUser(
                 examId,
@@ -62,23 +63,6 @@ public class ExamsController {
         return res;
     }
 
-//    @PostMapping("exams/{exam_id}")
-//    public Object aslsignExamToUser(
-//            @RequestHeader("Authorization") String token,
-//            @PathVariable("exam_id") Long examId
-//    ) {
-//        String[] strings = token.split(" ");
-//        if(strings.length != 2) {
-//            return new Error("Wrong authorization header structure!!!");
-//        }
-//        Object res = this.examsService.assignExamToUser(
-//                examId,
-//                strings[1]
-//        );
-//
-//        return res;
-//    }
-
     @PatchMapping("exams/{users_exam_id}")
     public Object submitExam(
             @RequestHeader("Authorization") String token,
@@ -87,7 +71,7 @@ public class ExamsController {
     ) {
         String[] strings = token.split(" ");
         if(strings.length != 2) {
-            return new Error("Wrong authorization header structure!!!");
+            return new ErrorMessage("Wrong authorization header structure!!!");
         }
         Object res = this.examsService.submitExam(
                 strings[1],

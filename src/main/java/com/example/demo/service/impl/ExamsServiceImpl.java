@@ -11,10 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.lang.Error;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,6 +25,7 @@ public class ExamsServiceImpl implements ExamsService {
     private final UsersExamsRepo usersExamsRepo;
     private final QuestionsRepo questionsRepo;
     private final UsersExamsQuestionsRepo usersExamsQuestionsRepo;
+    private final AnswersRepo answersRepo;
 
     @Override
     public Object getExams() {
@@ -54,37 +52,39 @@ public class ExamsServiceImpl implements ExamsService {
             return dtoExams;
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
     @Override
     public Object getExamById(Long examId) {
         try {
-            Exams exam = this.examsRepo.getById(examId);
-            if(exam == null) {
-                System.out.println(String.format("Could not find an exam with such %s id", examId.toString()));
-                return new Error(String.format("Could not find an exam with such %s id", examId.toString()));
+            Optional<Exams> exam = this.examsRepo.findById(examId);
+            if(exam.isEmpty()) {
+                System.out.printf("Could not find an exam with such %s id%n", examId.toString());
+                return new ErrorMessage(String.format("Could not find an exam with such %s id", examId.toString()));
             }
 
+            Exams gotExam = exam.get();
+
             Exam dtoExam = new Exam(
-                    exam.getId(),
-                    exam.getTitle(),
-                    exam.getNumOfQuestions(),
-                    exam.getNumOfParticipated(),
-                    exam.getRate(),
-                    exam.getAverageScore(),
-                    exam.getDifficulty().toString(),
-                    exam.getDescription(),
-                    exam.getTopic().getId(),
-                    exam.getTopic().getTitle(),
-                    exam.getIsPublic()
+                    gotExam.getId(),
+                    gotExam.getTitle(),
+                    gotExam.getNumOfQuestions(),
+                    gotExam.getNumOfParticipated(),
+                    gotExam.getRate(),
+                    gotExam.getAverageScore(),
+                    gotExam.getDifficulty().toString(),
+                    gotExam.getDescription(),
+                    gotExam.getTopic().getId(),
+                    gotExam.getTopic().getTitle(),
+                    gotExam.getIsPublic()
             );
 
             return dtoExam;
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
@@ -118,42 +118,37 @@ public class ExamsServiceImpl implements ExamsService {
             return filteredDtoExams;
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
     @Override
     public Object assignExamToUser(Long examId, String token) {
         try {
-            Exams examById = this.examsRepo.getById(examId);
-            if(examById == null) {
-                System.out.println(String.format("Could not find an exam with such %s id", examId.toString()));
-                return new Error(String.format("Could not find an exam with such %s id", examId.toString()));
-            }
+            Optional<Exams> examById = this.examsRepo.findById(examId);
 
-            Integer numOfQuestions = examById.getNumOfQuestions();
+            if(examById.isEmpty()) {
+                System.out.printf("Could not find an exam with such %s id%n", examId.toString());
+                return new ErrorMessage(String.format("Could not find an exam with such %s id", examId.toString()));
+            }
+            Integer numOfQuestions = examById.get().getNumOfQuestions();
 
             Users userByToken = this.usersRepo.findByToken(token);
             if(userByToken == null) {
-                System.out.println(String.format("Could not find a user with such %s token", token));
-                return new Error(String.format("Could not find a user with such %s token", token));
+                System.out.printf("Could not find a user with such %s token%n", token);
+                return new ErrorMessage(String.format("Could not find a user with such %s token", token));
             }
 
             List<Questions> questions = (List<Questions>) this.questionsService.getQuestionsByExamId(examId);
             if(questions == null) {
                 System.out.println("Could not find questions with given examId");
-                return new Error("Could not find questions with given examId");
+                return new ErrorMessage("Could not find questions with given examId");
             }
 
             Collections.shuffle(questions);
 
-//            UsersExamsQuestions usersExamsQuestions = new UsersExamsQuestions(
-//                    examId,
-//
-//            )
-
             UsersExams usersExams = new UsersExams(
-                    examById,
+                    examById.get(),
                     userByToken,
                     ExamStatus.ONGOING
             );
@@ -170,33 +165,29 @@ public class ExamsServiceImpl implements ExamsService {
                 );
             }
 
-            //---------------------------
-
             return new UsersExamsResponse(
                     usersExams.getId()
             );
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
     @Override
     public Object getExamQuestions(Long usersExamId) {
         try {
-            UsersExams usersExam = this.usersExamsRepo.getById(usersExamId);
-            if(usersExam == null) {
-                System.out.println(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
-                return new Error(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
+            Optional<UsersExams> usersExam = this.usersExamsRepo.findById(usersExamId);
+            if(usersExam.isEmpty()) {
+                System.out.printf("Could not find a usersExam with such %s id%n", usersExamId.toString());
+                return new ErrorMessage(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
             }
 
-            Exams examById = this.examsRepo.getById(usersExam.getExam().getId());
-            if(examById == null) {
-                System.out.println(String.format("Could not find an exam with such %s id", usersExam.getExam().getId().toString()));
-                return new Error(String.format("Could not find an exam with such %s id", usersExam.getExam().getId().toString()));
+            Optional<Exams> examById = this.examsRepo.findById(usersExam.get().getExam().getId());
+            if(examById.isEmpty()) {
+                System.out.printf("Could not find an exam with such %s id%n", usersExam.get().getExam().getId().toString());
+                return new ErrorMessage(String.format("Could not find an exam with such %s id", usersExam.get().getExam().getId().toString()));
             }
-
-//            Integer numOfQuestions = examById.getNumOfQuestions();
 
             List<UsersExamsQuestions> usersExamsQuestions = this.usersExamsQuestionsRepo.findAll();
             List<UsersExamsQuestions> usersExamsQuestionsByUsersExamId = usersExamsQuestions.stream()
@@ -220,21 +211,9 @@ public class ExamsServiceImpl implements ExamsService {
             }
 
             return examQuestions;
-//            for(int i = 0; i < numOfQuestions; i++) {
-//                Questions question = questions.get(i);
-//                examQuestions.add(new ExamQuestion(
-//                        question.getId(),
-//                        question.getType().toString(),
-//                        question.getPenalty(),
-//                        question.getCoefficient(),
-//                        question.getTitle(),
-//                        question.getOptions()
-//                ));
-//            }
-
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
@@ -243,14 +222,14 @@ public class ExamsServiceImpl implements ExamsService {
         try {
             Users user = this.usersRepo.findByToken(token);
             if(user == null) {
-                System.out.println(String.format("Could not find a user with such %s token", token));
-                return new Error(String.format("Could not find a user with such %s token", token));
+                System.out.printf("Could not find a user with such %s token%n", token);
+                return new ErrorMessage(String.format("Could not find a user with such %s token", token));
             }
 
-            UsersExams usersExam = this.usersExamsRepo.getById(usersExamId);
-            if(usersExam == null) {
-                System.out.println(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
-                return new Error(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
+            Optional<UsersExams> usersExam = this.usersExamsRepo.findById(usersExamId);
+            if(usersExam.isEmpty()) {
+                System.out.printf("Could not find a usersExam with such %s id%n", usersExamId.toString());
+                return new ErrorMessage(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
             }
 
             Float score = 0F;
@@ -259,9 +238,13 @@ public class ExamsServiceImpl implements ExamsService {
             List<QuestionReview> questionReviews = new ArrayList<>();
 
             for(QuestionSubmission questionSubmission: examSubmission.getQuestionSubmissions()) {
+                Answers answer = new Answers();
                 QuestionReview questionReview = new QuestionReview();
                 Questions question = this.questionsRepo.getById(questionSubmission.getQuestionId());
                 coeffs += question.getCoefficient();
+                answer.setQuestion(question);
+                answer.setUser(user);
+                answer.setValue(questionSubmission.getAnswer());
 
                 questionReview.setAnswer(question.getAnswer());
                 questionReview.setGivenAnswer(questionSubmission.getAnswer());
@@ -275,6 +258,7 @@ public class ExamsServiceImpl implements ExamsService {
                         if(answers.length != chosenAnswers.length) {
                             score -= question.getPenalty();
                             questionReview.setIsCorrect(false);
+                            answer.setIsCorrect(false);
                         } else {
                             Arrays.sort(answers);
                             Arrays.sort(chosenAnswers);
@@ -291,30 +275,36 @@ public class ExamsServiceImpl implements ExamsService {
                             if(isCorrect) {
                                 score += question.getCoefficient();
                                 questionReview.setIsCorrect(true);
+                                answer.setIsCorrect(true);
                             }else {
                                 score -= question.getPenalty();
                                 questionReview.setIsCorrect(false);
+                                answer.setIsCorrect(false);
                             }
                         }
                     } else {
                         if(questionSubmission.getAnswer().equals(question.getAnswer())) {
                             score += question.getCoefficient();
                             questionReview.setIsCorrect(true);
+                            answer.setIsCorrect(true);
                         } else {
                             score -= question.getPenalty();
                             questionReview.setIsCorrect(false);
+                            answer.setIsCorrect(false);
                         }
                     }
                 } else {
                     questionReview.setIsCorrect(false);
+                    answer.setIsCorrect(false);
                 }
 
                 questionReviews.add(questionReview);
+                this.answersRepo.save(answer);
             }
 
             score = (score/coeffs) * 100F;
 
-            Exams exam = this.examsRepo.getById(usersExam.getExam().getId());
+            Exams exam = this.examsRepo.getById(usersExam.get().getExam().getId());
             Float prevAverageScore = exam.getAverageScore();
             Float prevRating = exam.getRate();
 
@@ -329,11 +319,11 @@ public class ExamsServiceImpl implements ExamsService {
 
             this.examsRepo.save(exam);
 
-            usersExam.setScore(score);
-            usersExam.setRating(examSubmission.getRating());
-            usersExam.setStatus(ExamStatus.FINISHED);
+            usersExam.get().setScore(score);
+            usersExam.get().setRating(examSubmission.getRating());
+            usersExam.get().setStatus(ExamStatus.FINISHED);
 
-            this.usersExamsRepo.save(usersExam);
+            this.usersExamsRepo.save(usersExam.get());
 
             return new ExamReview(
                     score,
@@ -341,7 +331,7 @@ public class ExamsServiceImpl implements ExamsService {
             );
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 }

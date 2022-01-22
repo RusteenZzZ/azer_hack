@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,15 +24,16 @@ public class QuestionsServiceImpl implements QuestionsService {
 
     @Override
     public Object getQuestionsByExamId(Long examId) {
-        Exams exam = this.examsRepo.getById(examId);
-        if(exam == null) {
-            System.out.println(String.format("Could not find an exam with such %s id", examId.toString()));
+//        Exams exam = this.examsRepo.getById(examId);
+        Optional<Exams> exam = this.examsRepo.findById(examId);
+        if(exam.isEmpty()) {
+            System.out.printf("Could not find an exam with such %s id%n", examId.toString());
             return null;
         }
 
-        List<Categories> categories = (List<Categories>) this.categoriesService.getCategoriesByTopicId(exam.getTopic().getId());
+        List<Categories> categories = (List<Categories>) this.categoriesService.getCategoriesByTopicId(exam.get().getTopic().getId());
         if(categories == null) {
-            System.out.println(String.format("Could not find categories with such %s topicId", exam.getTopic().getId().toString()));
+            System.out.printf("Could not find categories with such %s topicId%n", exam.get().getTopic().getId().toString());
             return null;
         }
 

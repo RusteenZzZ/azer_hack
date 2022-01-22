@@ -11,7 +11,7 @@ import lombok.Setter;
 @Setter
 public class ExamQuestion {
     private Long id;
-    private String questionType;
+    private String type;
     private Float penalty;
     private Float coefficient;
     private String title;

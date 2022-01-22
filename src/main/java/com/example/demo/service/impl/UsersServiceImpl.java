@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.*;
-import com.example.demo.dto.Error;
+import com.example.demo.dto.ErrorMessage;
 import com.example.demo.entity.Users;
 import com.example.demo.repository.UsersRepo;
 import com.example.demo.security.jwt.JWTToken;
@@ -23,7 +23,7 @@ public class UsersServiceImpl implements UsersService {
                 System.out.println(
                         String.format("Could not find user with such %s token", getUserByToken.getToken())
                 );
-                return new Error(
+                return new ErrorMessage(
                         String.format("Could not find user with such %s token", getUserByToken.getToken())
                 );
             } else {
@@ -35,7 +35,7 @@ public class UsersServiceImpl implements UsersService {
             }
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
@@ -63,13 +63,13 @@ public class UsersServiceImpl implements UsersService {
             System.out.println(
                     String.format("Could not find user with email %s", login.getEmail())
             );
-            return new Error(
+            return new ErrorMessage(
                     String.format("Could not find user with email %s", login.getEmail())
             );
 
         } catch (Exception e){
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
@@ -88,11 +88,11 @@ public class UsersServiceImpl implements UsersService {
                 return new RegisterSuccess(true);
             } else {
                 System.out.println(String.format("The user with email %s already exists", register.getEmail()));
-                return new Error(String.format("The user with email %s already exists", register.getEmail()));
+                return new ErrorMessage(String.format("The user with email %s already exists", register.getEmail()));
             }
         }catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 
@@ -102,14 +102,14 @@ public class UsersServiceImpl implements UsersService {
             Users userByToken = this.usersRepo.findByToken(logout.getToken());
 
             if(userByToken == null) {
-                return new Error(String.format("There is no a user with such %s token", logout.getToken()));
+                return new ErrorMessage(String.format("There is no a user with such %s token", logout.getToken()));
             } else {
                 userByToken.setToken(null);
                 return new LogoutSuccess(true);
             }
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 }

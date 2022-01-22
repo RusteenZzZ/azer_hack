@@ -28,7 +28,7 @@ public class UsersController {
     ) {
         String[] strings = token.split(" ");
         if(strings.length != 2) {
-            return new Error("Wrong authorization header structure!!!");
+            return new ErrorMessage("Wrong authorization header structure!!!");
         }
         Object res = this.usersService.getUserByToken(new GetUserByToken(strings[1]));
 

@@ -1,6 +1,7 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.Category;
+import com.example.demo.dto.ErrorMessage;
 import com.example.demo.dto.Topic;
 import com.example.demo.entity.Categories;
 import com.example.demo.entity.Topics;
@@ -47,7 +48,7 @@ public class TopicsServiceImpl implements TopicsService {
             return dtoTopics;
         } catch (Exception e) {
             System.out.println(e);
-            return new Error(e.toString());
+            return new ErrorMessage(e.toString());
         }
     }
 }

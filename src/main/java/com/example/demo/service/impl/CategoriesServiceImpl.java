@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,9 +37,9 @@ public class CategoriesServiceImpl implements CategoriesService {
     @Override
     public Integer getNumOfQuestions(Long categoryId) {
         try {
-            Categories category = this.categoriesRepo.getById(categoryId);
-            if(category == null) {
-                System.out.println(String.format("Could not find category with such %s id", categoryId.toString()));
+            Optional<Categories> category = this.categoriesRepo.findById(categoryId);
+            if(category.isEmpty()) {
+                System.out.printf("Could not find category with such %s id%n", categoryId.toString());
                 return null;
             }
 
