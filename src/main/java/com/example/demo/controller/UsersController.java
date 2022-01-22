@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.Login;
+import com.example.demo.dto.Logout;
 import com.example.demo.dto.Register;
 import com.example.demo.service.impl.UsersServiceImpl;
 import lombok.AllArgsConstructor;
@@ -28,18 +29,25 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody Login login) {
-        String res = this.usersService.loginUser(login);
+    public Object login(@RequestBody Login login) {
+        Object res = this.usersService.loginUser(login);
 
         return res;
     }
 
     @PostMapping("/register")
-    public String register(@RequestBody Register register) {
+    public Object register(@RequestBody Register register) {
 
         register.setPassword(encoder().encode(register.getPassword()));
 
-        String res = this.usersService.registerUser(register);
+        Object res = this.usersService.registerUser(register);
+
+        return res;
+    }
+
+    @PostMapping("/logout")
+    public Object logout(@RequestBody Logout logout) {
+        Object res = this.usersService.logoutUser(logout);
 
         return res;
     }

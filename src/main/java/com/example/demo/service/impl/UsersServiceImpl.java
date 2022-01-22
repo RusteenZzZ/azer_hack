@@ -1,7 +1,7 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.dto.Login;
-import com.example.demo.dto.Register;
+import com.example.demo.dto.*;
+import com.example.demo.dto.Error;
 import com.example.demo.entity.Users;
 import com.example.demo.repository.UsersRepo;
 import com.example.demo.security.jwt.JWTToken;
@@ -16,7 +16,7 @@ public class UsersServiceImpl implements UsersService {
     private final UsersRepo usersRepo;
 
     @Override
-    public String loginUser(Login login) {
+    public Object loginUser(Login login) {
 
         String token = null;
         System.out.println("------------------");
@@ -28,17 +28,19 @@ public class UsersServiceImpl implements UsersService {
                 token = jwtToken.getJWTToken(login.getEmail());
                 user.setToken(token);
                 this.usersRepo.save(user);
+                return new LoginSuccess(token);
             }
+            System.out.println(String.format("Could not find user with email %s", login.getEmail()));
+            return new Error(String.format("Could not find user with email %s", login.getEmail()));
 
         } catch (Exception e){
-            System.out.println(String.format("Could not find user with email %s", login.getEmail()));
+            System.out.println(e);
+            return new Error(e.toString());
         }
-
-        return token;
     }
 
     @Override
-    public String registerUser(Register register) {
+    public Object registerUser(Register register) {
         Users user = new Users(
                 register.getName(),
                 register.getEmail(),
@@ -49,16 +51,26 @@ public class UsersServiceImpl implements UsersService {
             Users userByEmail = this.usersRepo.findByEmail(register.getEmail());
             if(userByEmail == null) {
                 this.usersRepo.save(user);
+                return new RegisterSuccess(true);
             } else {
                 System.out.println(String.format("The user with email %s already exists", register.getEmail()));
-                return null;
+                return new Error(String.format("The user with email %s already exists", register.getEmail()));
             }
         }catch (Exception e) {
             System.out.println(e);
-            return "Fail";
+            return new Error(e.toString());
         }
-
-        return "TEST";
     }
 
+    @Override
+    public Object logoutUser(Logout logout) {
+        Users userByToken = this.usersRepo.findByToken(logout.getToken());
+
+        if(userByToken == null) {
+            return new Error(String.format("There is no a user with such %s token", logout.getToken()));
+        } else {
+            userByToken.setToken(null);
+            return new LogoutSuccess(true);
+        }
+    }
 }
