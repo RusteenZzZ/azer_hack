@@ -33,4 +33,22 @@ public class Questions {
     private Categories category;
     @OneToMany(mappedBy = "question")
     private Set<Answers> chosenAnswers = new HashSet<>();
+
+    public Questions(QuestionType type,
+                     String answer,
+                     Float penalty,
+                     Float coefficient,
+                     String title,
+                     String suggestion,
+                     String options,
+                     Categories category) {
+        this.type = type;
+        this.answer = answer;
+        this.penalty = penalty;
+        this.coefficient = coefficient;
+        this.title = title;
+        this.suggestion = suggestion;
+        this.options = options;
+        this.category = category;
+    }
 }

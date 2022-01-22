@@ -66,7 +66,8 @@ public class Initializer implements CommandLineRunner {
         this.examsRepo.save(exam2);
 
         Categories category1 = new Categories(
-
+                "Python variables",
+                topic2
         );
         Categories category2 = new Categories(
 
