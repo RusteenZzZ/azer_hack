@@ -17,8 +17,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class TopicsServiceImpl implements TopicsService {
 
-    private CategoriesRepo categoriesRepo;
-    private TopicsRepo topicsRepo;
+    private final CategoriesRepo categoriesRepo;
+    private final TopicsRepo topicsRepo;
+
+    private final CategoriesServiceImpl categoriesService;
 
     @Override
     public Object getTopics() {
@@ -36,7 +38,8 @@ public class TopicsServiceImpl implements TopicsService {
                                     .map(category -> new Category(
                                             category.getId(),
                                             category.getTitle(),
-                                            category.getSuggestion()
+                                            category.getSuggestion(),
+                                            this.categoriesService.getNumOfQuestions(category.getId())
                                     ))
                                     .collect(Collectors.toList())
                     ))
@@ -47,16 +50,4 @@ public class TopicsServiceImpl implements TopicsService {
             return new Error(e.toString());
         }
     }
-
-//    @Override
-//    public Object getTopicsByExamId(Long examId) {
-//        try {
-//            List<Topics> topics = this.topicsRepo.findAll();
-//            List<Topics> topicsByExamId = topics.stream()
-//                    .filter(topic -> )
-//        } catch (Exception e) {
-//            System.out.println(e);
-//            return new Error(e.toString());
-//        }
-//    }
 }

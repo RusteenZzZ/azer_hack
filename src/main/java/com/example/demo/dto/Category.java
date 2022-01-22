@@ -13,4 +13,5 @@ public class Category {
     private Long id;
     private String title;
     private String suggestion;
+    private Integer numOfQuestions;
 }
