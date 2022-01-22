@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.Error;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin(origins = "http://localhost:3000")
@@ -23,6 +25,9 @@ public class UsersController {
     @GetMapping("/get-user")
     public Object getUserByToken(@RequestHeader("Authorization") String token) {
         String[] strings = token.split(" ");
+        if(strings.length != 2) {
+            return new Error("Wrong authorization header structure!!!");
+        }
         Object res = this.usersService.getUserByToken(new GetUserByToken(strings[1]));
 
         return res;
