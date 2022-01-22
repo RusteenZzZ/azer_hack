@@ -14,6 +14,7 @@ import javax.persistence.*;
 @Setter
 public class Answers {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String value;
     private Boolean isCorrect;

@@ -17,6 +17,7 @@ import java.util.Set;
 @Setter
 public class Questions {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Enumerated(
             EnumType.STRING
@@ -28,6 +29,8 @@ public class Questions {
     private String title;
     private String suggestion;
     private String options;
+    @ManyToOne()
+    private Categories category;
     @OneToMany(mappedBy = "question")
     private Set<Answers> chosenAnswers = new HashSet<>();
 }

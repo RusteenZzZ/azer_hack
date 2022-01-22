@@ -17,6 +17,7 @@ import java.util.Set;
 @Setter
 public class Exams {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String title;
     private Integer numOfQuestions;
