@@ -20,9 +20,10 @@ public class UsersController {
         return "HELLO";
     }
 
-    @GetMapping("/getUser")
+    @GetMapping("/get-user")
     public Object getUserByToken(@RequestHeader("Authorization") String token) {
-        Object res = this.usersService.getUserByToken(new GetUserByToken(token));
+        String[] strings = token.split(" ");
+        Object res = this.usersService.getUserByToken(new GetUserByToken(strings[1]));
 
         return res;
     }

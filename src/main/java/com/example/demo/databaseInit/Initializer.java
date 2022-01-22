@@ -69,68 +69,68 @@ public class Initializer implements CommandLineRunner {
                 "Python variables",
                 topic2
         );
-        Categories category2 = new Categories(
-
-        );
-        Categories category3 = new Categories(
-
-        );
-        Categories category4 = new Categories(
-
-        );
-        Categories category5 = new Categories(
-
-        );
-        Categories category6 = new Categories(
-
-        );
-        this.categoriesRepo.save(category1);
-        this.categoriesRepo.save(category2);
-        this.categoriesRepo.save(category3);
-        this.categoriesRepo.save(category4);
-        this.categoriesRepo.save(category5);
-        this.categoriesRepo.save(category6);
-
-        Questions question1 = new Questions(
-
-        );
-        Questions question2 = new Questions(
-
-        );
-        Questions question3 = new Questions(
-
-        );
-        Questions question4 = new Questions(
-
-        );
-        Questions question5 = new Questions(
-
-        );
-        Questions question6 = new Questions(
-
-        );
-        Questions question7 = new Questions(
-
-        );
-        Questions question8 = new Questions(
-
-        );
-        Questions question9 = new Questions(
-
-        );
-        Questions question10 = new Questions(
-
-        );
-        this.usersRepo.save(question1);
-        this.usersRepo.save(question2);
-        this.usersRepo.save(question3);
-        this.usersRepo.save(question4);
-        this.usersRepo.save(question5);
-        this.usersRepo.save(question6);
-        this.usersRepo.save(question7);
-        this.usersRepo.save(question8);
-        this.usersRepo.save(question9);
-        this.usersRepo.save(question10);
+//        Categories category2 = new Categories(
+//
+//        );
+//        Categories category3 = new Categories(
+//
+//        );
+//        Categories category4 = new Categories(
+//
+//        );
+//        Categories category5 = new Categories(
+//
+//        );
+//        Categories category6 = new Categories(
+//
+//        );
+//        this.categoriesRepo.save(category1);
+//        this.categoriesRepo.save(category2);
+//        this.categoriesRepo.save(category3);
+//        this.categoriesRepo.save(category4);
+//        this.categoriesRepo.save(category5);
+//        this.categoriesRepo.save(category6);
+//
+//        Questions question1 = new Questions(
+//
+//        );
+//        Questions question2 = new Questions(
+//
+//        );
+//        Questions question3 = new Questions(
+//
+//        );
+//        Questions question4 = new Questions(
+//
+//        );
+//        Questions question5 = new Questions(
+//
+//        );
+//        Questions question6 = new Questions(
+//
+//        );
+//        Questions question7 = new Questions(
+//
+//        );
+//        Questions question8 = new Questions(
+//
+//        );
+//        Questions question9 = new Questions(
+//
+//        );
+//        Questions question10 = new Questions(
+//
+//        );
+//        this.usersRepo.save(question1);
+//        this.usersRepo.save(question2);
+//        this.usersRepo.save(question3);
+//        this.usersRepo.save(question4);
+//        this.usersRepo.save(question5);
+//        this.usersRepo.save(question6);
+//        this.usersRepo.save(question7);
+//        this.usersRepo.save(question8);
+//        this.usersRepo.save(question9);
+//        this.usersRepo.save(question10);
 
     }
 }
