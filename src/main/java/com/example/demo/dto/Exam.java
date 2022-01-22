@@ -18,6 +18,7 @@ public class Exam {
     private Float averageScore;
     private String difficulty;
     private String description;
+    private Long topicId;
     private String topicTitle;
     private Boolean isPublic;
 }
