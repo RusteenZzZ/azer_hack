@@ -41,7 +41,6 @@ public class UsersServiceImpl implements UsersService {
     public String registerUser(Register register) {
         Users user = new Users(
                 register.getName(),
-                register.getSurname(),
                 register.getEmail(),
                 register.getPassword()
         );
