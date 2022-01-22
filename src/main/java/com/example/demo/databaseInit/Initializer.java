@@ -25,9 +25,9 @@ public class Initializer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         Users user1 = new Users(
-                "robert",
-                "robert@gmail.com",
-                passwordEncoder.encode("password")
+                "kamil",
+                "kamil@email.com",
+                passwordEncoder.encode("1231231")
         );
         this.usersRepo.save(user1);
 
