@@ -12,5 +12,7 @@ public interface ExamsService {
 
     public Object assignExamToUser(Long examId, String token);
 
+    public Object getExamQuestions(Long usersExamId);
+
     public Object submitExam(String token, Long usersExamId, ExamSubmission examSubmission);
 }

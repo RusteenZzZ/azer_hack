@@ -1,16 +1,10 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.dto.*;
-import com.example.demo.entity.Exams;
-import com.example.demo.entity.Questions;
-import com.example.demo.entity.Users;
-import com.example.demo.entity.UsersExams;
+import com.example.demo.entity.*;
 import com.example.demo.enums.ExamStatus;
 import com.example.demo.enums.QuestionType;
-import com.example.demo.repository.ExamsRepo;
-import com.example.demo.repository.QuestionsRepo;
-import com.example.demo.repository.UsersExamsRepo;
-import com.example.demo.repository.UsersRepo;
+import com.example.demo.repository.*;
 import com.example.demo.service.ExamsService;
 import com.example.demo.service.QuestionsService;
 import lombok.AllArgsConstructor;
@@ -33,6 +27,7 @@ public class ExamsServiceImpl implements ExamsService {
     private final UsersRepo usersRepo;
     private final UsersExamsRepo usersExamsRepo;
     private final QuestionsRepo questionsRepo;
+    private final UsersExamsQuestionsRepo usersExamsQuestionsRepo;
 
     @Override
     public Object getExams() {
@@ -152,10 +147,68 @@ public class ExamsServiceImpl implements ExamsService {
 
             Collections.shuffle(questions);
 
+//            UsersExamsQuestions usersExamsQuestions = new UsersExamsQuestions(
+//                    examId,
+//
+//            )
+
+            UsersExams usersExams = new UsersExams(
+                    examById,
+                    userByToken,
+                    ExamStatus.ONGOING
+            );
+
+            this.usersExamsRepo.save(usersExams);
+
+            for(int i = 0; i < numOfQuestions; i++){
+                Questions question = questions.get(i);
+                this.usersExamsQuestionsRepo.save(
+                        new UsersExamsQuestions(
+                            usersExams,
+                            question
+                        )
+                );
+            }
+
+            //---------------------------
+
+            return new UsersExamsResponse(
+                    usersExams.getId()
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Error(e.toString());
+        }
+    }
+
+    @Override
+    public Object getExamQuestions(Long usersExamId) {
+        try {
+            UsersExams usersExam = this.usersExamsRepo.getById(usersExamId);
+            if(usersExam == null) {
+                System.out.println(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
+                return new Error(String.format("Could not find a usersExam with such %s id", usersExamId.toString()));
+            }
+
+            Exams examById = this.examsRepo.getById(usersExam.getExam().getId());
+            if(examById == null) {
+                System.out.println(String.format("Could not find an exam with such %s id", usersExam.getExam().getId().toString()));
+                return new Error(String.format("Could not find an exam with such %s id", usersExam.getExam().getId().toString()));
+            }
+
+//            Integer numOfQuestions = examById.getNumOfQuestions();
+
+            List<UsersExamsQuestions> usersExamsQuestions = this.usersExamsQuestionsRepo.findAll();
+            List<UsersExamsQuestions> usersExamsQuestionsByUsersExamId = usersExamsQuestions.stream()
+                    .filter(question -> question.getUsersExam().getId() == usersExamId)
+                    .collect(Collectors.toList());
+
             List<ExamQuestion> examQuestions = new ArrayList();
 
-            for(int i = 0; i < numOfQuestions; i++) {
-                Questions question = questions.get(i);
+            for(UsersExamsQuestions userExamQuestion: usersExamsQuestionsByUsersExamId) {
+                Questions question = this.questionsRepo.getById(
+                        userExamQuestion.getQuestion().getId()
+                );
                 examQuestions.add(new ExamQuestion(
                         question.getId(),
                         question.getType().toString(),
@@ -166,14 +219,19 @@ public class ExamsServiceImpl implements ExamsService {
                 ));
             }
 
-            UsersExams usersExams = new UsersExams(
-                    examById,
-                    userByToken,
-                    ExamStatus.ONGOING
-            );
-
-            this.usersExamsRepo.save(usersExams);
             return examQuestions;
+//            for(int i = 0; i < numOfQuestions; i++) {
+//                Questions question = questions.get(i);
+//                examQuestions.add(new ExamQuestion(
+//                        question.getId(),
+//                        question.getType().toString(),
+//                        question.getPenalty(),
+//                        question.getCoefficient(),
+//                        question.getTitle(),
+//                        question.getOptions()
+//                ));
+//            }
+
         } catch (Exception e) {
             System.out.println(e);
             return new Error(e.toString());

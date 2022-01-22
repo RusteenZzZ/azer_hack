@@ -4,6 +4,8 @@ import com.example.demo.enums.ExamStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @NoArgsConstructor
@@ -25,6 +27,8 @@ public class UsersExams {
             EnumType.STRING
     )
     private ExamStatus status;
+    @OneToMany(mappedBy = "usersExam")
+    private Set<UsersExamsQuestions> questions = new HashSet<>();
 
     public UsersExams(Exams exam,
                       Users user,

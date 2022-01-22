@@ -53,6 +53,32 @@ public class ExamsController {
         return res;
     }
 
+    @GetMapping("users-exams/{users_exams_id}")
+    public Object getExamQuestions(
+            @PathVariable("users_exams_id") Long usersExamsId
+    ) {
+        Object res = this.examsService.getExamQuestions(usersExamsId);
+
+        return res;
+    }
+
+//    @PostMapping("exams/{exam_id}")
+//    public Object aslsignExamToUser(
+//            @RequestHeader("Authorization") String token,
+//            @PathVariable("exam_id") Long examId
+//    ) {
+//        String[] strings = token.split(" ");
+//        if(strings.length != 2) {
+//            return new Error("Wrong authorization header structure!!!");
+//        }
+//        Object res = this.examsService.assignExamToUser(
+//                examId,
+//                strings[1]
+//        );
+//
+//        return res;
+//    }
+
     @PatchMapping("exams/{users_exam_id}")
     public Object submitExam(
             @RequestHeader("Authorization") String token,

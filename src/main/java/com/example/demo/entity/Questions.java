@@ -31,6 +31,8 @@ public class Questions {
     private Categories category;
     @OneToMany(mappedBy = "question")
     private Set<Answers> chosenAnswers = new HashSet<>();
+    @OneToMany(mappedBy = "question")
+    private Set<UsersExamsQuestions> usersExamsQuestions = new HashSet<>();
 
     public Questions(QuestionType type,
                      String answer,
