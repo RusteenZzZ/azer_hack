@@ -98,13 +98,18 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public Object logoutUser(Logout logout) {
-        Users userByToken = this.usersRepo.findByToken(logout.getToken());
+        try {
+            Users userByToken = this.usersRepo.findByToken(logout.getToken());
 
-        if(userByToken == null) {
-            return new Error(String.format("There is no a user with such %s token", logout.getToken()));
-        } else {
-            userByToken.setToken(null);
-            return new LogoutSuccess(true);
+            if(userByToken == null) {
+                return new Error(String.format("There is no a user with such %s token", logout.getToken()));
+            } else {
+                userByToken.setToken(null);
+                return new LogoutSuccess(true);
+            }
+        } catch (Exception e) {
+            System.out.println(e);
+            return new Error(e.toString());
         }
     }
 }

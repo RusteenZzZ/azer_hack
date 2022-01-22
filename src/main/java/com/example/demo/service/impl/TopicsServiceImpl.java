@@ -43,7 +43,20 @@ public class TopicsServiceImpl implements TopicsService {
                     .collect(Collectors.toList());
             return dtoTopics;
         } catch (Exception e) {
+            System.out.println(e);
             return new Error(e.toString());
         }
     }
+
+//    @Override
+//    public Object getTopicsByExamId(Long examId) {
+//        try {
+//            List<Topics> topics = this.topicsRepo.findAll();
+//            List<Topics> topicsByExamId = topics.stream()
+//                    .filter(topic -> )
+//        } catch (Exception e) {
+//            System.out.println(e);
+//            return new Error(e.toString());
+//        }
+//    }
 }

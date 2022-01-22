@@ -1,10 +1,7 @@
 package com.example.demo.entity;
 
 import com.example.demo.enums.ExamDifficulty;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -15,6 +12,7 @@ import java.util.Set;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 public class Exams {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

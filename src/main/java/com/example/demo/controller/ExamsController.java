@@ -18,12 +18,25 @@ public class ExamsController {
     }
 
     @GetMapping("topics/{topic_id}/exams")
-    public Object getExamsByTopic(@PathVariable("topic_id") Long topicId){
+    public Object getExamsByTopic(
+            @PathVariable("topic_id") Long topicId
+    ) {
         Object res = this.examsService.getExamsByTopic(topicId);
 
         return res;
     }
 
-//    @PostMapping("exams/{exam_id}")
-//    public Object assignExamToUser(@RequestHeader)
+    @PostMapping("exams/{exam_id}")
+    public Object assignExamToUser(
+            @RequestHeader("Authorization") String token,
+            @PathVariable("exam_id") Long examId
+    ) {
+        String[] strings = token.split(" ");
+        if(strings.length != 2) {
+            return new Error("Wrong authorization header structure!!!");
+        }
+        Object res = this.examsService.assignExamToUser(examId, strings[1]);
+
+        return res;
+    }
 }

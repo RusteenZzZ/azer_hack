@@ -23,7 +23,9 @@ public class UsersController {
     }
 
     @GetMapping("/get-user")
-    public Object getUserByToken(@RequestHeader("Authorization") String token) {
+    public Object getUserByToken(
+            @RequestHeader("Authorization") String token
+    ) {
         String[] strings = token.split(" ");
         if(strings.length != 2) {
             return new Error("Wrong authorization header structure!!!");
@@ -34,15 +36,18 @@ public class UsersController {
     }
 
     @PostMapping("/login")
-    public Object login(@RequestBody Login login) {
+    public Object login(
+            @RequestBody Login login
+    ) {
         Object res = this.usersService.loginUser(login);
 
         return res;
     }
 
     @PostMapping("/register")
-    public Object register(@RequestBody Register register) {
-
+    public Object register(
+            @RequestBody Register register
+    ) {
         register.setPassword(passwordEncoder.encode(register.getPassword()));
 
         Object res = this.usersService.registerUser(register);
@@ -51,7 +56,9 @@ public class UsersController {
     }
 
     @PostMapping("/logout")
-    public Object logout(@RequestBody Logout logout) {
+    public Object logout(
+            @RequestBody Logout logout
+    ) {
         Object res = this.usersService.logoutUser(logout);
 
         return res;
