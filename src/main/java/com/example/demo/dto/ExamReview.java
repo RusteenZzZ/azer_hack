@@ -12,6 +12,7 @@ import java.util.List;
 @Getter
 @Setter
 public class ExamReview {
+    private String examTitle;
     private Float score;
     private List<QuestionReview> questionReviews;
 }

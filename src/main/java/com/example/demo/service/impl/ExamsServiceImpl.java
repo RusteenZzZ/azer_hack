@@ -249,6 +249,7 @@ public class ExamsServiceImpl implements ExamsService {
             }
 
             return new ExamReview(
+                    usersExam.get().getExam().getTitle(),
                     usersExam.get().getScore(),
                     questionReviews
             );
