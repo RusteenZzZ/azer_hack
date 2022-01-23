@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionReview {
-    private Long questionId;
+    private Long id;
+    private String type;
     private String title;
     private Long categoryId;
     private String categoryTitle;
