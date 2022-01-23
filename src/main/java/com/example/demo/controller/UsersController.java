@@ -10,7 +10,7 @@ import java.lang.Error;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "https://azercell-2022.web.app")
+//@CrossOrigin(origins = "https://azercell-2022.web.app")
 public class UsersController {
 
     private final UsersServiceImpl usersService;

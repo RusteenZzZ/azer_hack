@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@CrossOrigin(origins = "https://azercell-2022.web.app")
+//@CrossOrigin(origins = "https://azercell-2022.web.app")
 public class TopicsController {
 
     private final TopicsService topicsService;
