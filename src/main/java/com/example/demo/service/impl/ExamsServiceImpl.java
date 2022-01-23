@@ -88,6 +88,41 @@ public class ExamsServiceImpl implements ExamsService {
     }
 
     @Override
+    public Object getUsersExams(String token) {
+        try {
+            Users user = this.usersRepo.findByToken(token);
+            if(user == null) {
+                System.out.printf("Could not find user with %s such token%n", token);
+                return new ErrorMessage(String.format("Could not find user with %s such token", token));
+            }
+
+            List<ExamOfUser> examsOfUser = new ArrayList<>();
+
+            List<UsersExams> usersExams = this.usersExamsRepo.findAll();
+            List<UsersExams> usersExamsByUserId = usersExams.stream()
+                    .filter(usersExam -> usersExam.getUser().getId() == user.getId())
+                    .collect(Collectors.toList());
+
+            for(UsersExams usersExam: usersExamsByUserId) {
+                examsOfUser.add(
+                        new ExamOfUser(
+                                usersExam.getId(),
+                                usersExam.getExam().getTitle(),
+                                usersExam.getScore(),
+                                usersExam.getExam().getDifficulty().toString(),
+                                usersExam.getCreatedAt()
+                        )
+                );
+            }
+
+            return examsOfUser;
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ErrorMessage(e.toString());
+        }
+    }
+
+    @Override
     public Object getExamsByTopic(Long topicId) {
         try {
             List<Exams> exams = this.examsRepo.findAll();
@@ -115,6 +150,51 @@ public class ExamsServiceImpl implements ExamsService {
                     .collect(Collectors.toList());
 
             return filteredDtoExams;
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ErrorMessage(e.toString());
+        }
+    }
+
+    @Override
+    public Object createExam(String token, CreateExam createExam) {
+        try {
+            Users user = this.usersRepo.findByToken(token);
+            if(user == null) {
+                System.out.printf("Could not find user with %s such token%n", token);
+                return new ErrorMessage(String.format("Could not find user with %s such token", token));
+            }
+
+            Exams exam = new Exams();
+            exam.setTitle(createExam.getTitle());
+            exam.setNumOfQuestions(createExam.getNumOfQuestion());
+
+            List<Questions> questions = this.questionsRepo.findAll();
+            List<Questions> questionsByCategoryIds = questions.stream()
+                    .filter(question -> createExam.getCategoryIds().contains(question.getCategory().getId()))
+                    .collect(Collectors.toList());
+
+            Collections.shuffle(questionsByCategoryIds);
+
+            UsersExams usersExam = new UsersExams(
+                    exam,
+                    user,
+                    ExamStatus.ONGOING
+            );
+
+            for(int i = 0; i < createExam.getNumOfQuestion(); i++) {
+                Questions question = questionsByCategoryIds.get(i);
+                this.usersExamsQuestionsRepo.save(
+                        new UsersExamsQuestions(
+                                usersExam,
+                                question
+                        )
+                );
+            }
+
+            return new UsersExamsResponse(
+                    usersExam.getId()
+            );
         } catch (Exception e) {
             System.out.println(e);
             return new ErrorMessage(e.toString());
@@ -365,6 +445,7 @@ public class ExamsServiceImpl implements ExamsService {
                     (prevRating * exam.getNumOfParticipated() + examSubmission.getRating())
                             /(exam.getNumOfParticipated() + 1)
             );
+            exam.setNumOfParticipated(exam.getNumOfParticipated() + 1);
 
             this.examsRepo.save(exam);
 

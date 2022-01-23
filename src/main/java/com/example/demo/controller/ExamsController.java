@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.CreateExam;
 import com.example.demo.dto.ErrorMessage;
 import com.example.demo.dto.ExamSubmission;
 import com.example.demo.service.impl.ExamsServiceImpl;
@@ -28,11 +29,38 @@ public class ExamsController {
         return res;
     }
 
+    @GetMapping("users-exams")
+    public Object getUsersExams(
+            @RequestHeader("Authorization") String token
+    ) {
+        String[] strings = token.split(" ");
+        if(strings.length != 2) {
+            return new ErrorMessage("Wrong authorization header structure!!!");
+        }
+        Object res = this.examsService.getUsersExams(strings[1]);
+
+        return res;
+    }
+
     @GetMapping("topics/{topic_id}/exams")
     public Object getExamsByTopic(
             @PathVariable("topic_id") Long topicId
     ) {
         Object res = this.examsService.getExamsByTopic(topicId);
+
+        return res;
+    }
+
+    @PostMapping("exams")
+    public Object createExam(
+            @RequestHeader("Authorization") String token,
+            @RequestBody CreateExam createExam
+    ) {
+        String[] strings = token.split(" ");
+        if(strings.length != 2) {
+            return new ErrorMessage("Wrong authorization header structure!!!");
+        }
+        Object res = this.examsService.createExam(strings[1], createExam);
 
         return res;
     }

@@ -4,6 +4,8 @@ import com.example.demo.enums.ExamStatus;
 import lombok.*;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,6 +29,7 @@ public class UsersExams {
             EnumType.STRING
     )
     private ExamStatus status;
+    private Date createdAt;
     @OneToMany(mappedBy = "usersExam")
     private Set<UsersExamsQuestions> questions = new HashSet<>();
 
@@ -36,5 +39,10 @@ public class UsersExams {
         this.exam = exam;
         this.user = user;
         this.status = status;
+    }
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = new Date();
     }
 }
