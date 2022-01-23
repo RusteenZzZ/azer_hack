@@ -237,6 +237,7 @@ public class ExamsServiceImpl implements ExamsService {
                 Questions question = this.questionsRepo.getById(usersExamsQuestion.getQuestion().getId());
                 questionReviews.add(
                         new QuestionReview(
+                                question.getId(),
                                 question.getTitle(),
                                 question.getCategory().getId(),
                                 question.getCategory().getTitle(),

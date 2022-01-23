@@ -10,6 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionReview {
+    private Long questionId;
     private String title;
     private Long categoryId;
     private String categoryTitle;
