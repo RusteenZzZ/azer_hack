@@ -16,5 +16,5 @@ public class ExamOfUser {
     private String title;
     private Float score;
     private String difficulty;
-    private Date createdAt;
+//    private Date createdAt;
 }

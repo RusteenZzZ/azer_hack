@@ -110,8 +110,8 @@ public class ExamsServiceImpl implements ExamsService {
                                 usersExam.getId(),
                                 usersExam.getExam().getTitle(),
                                 usersExam.getScore(),
-                                usersExam.getExam().getDifficulty().toString(),
-                                usersExam.getCreatedAt()
+                                usersExam.getExam().getDifficulty().toString()
+//                                usersExam.getCreatedAt()
                         )
                 );
             }

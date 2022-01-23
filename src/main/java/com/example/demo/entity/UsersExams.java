@@ -28,7 +28,7 @@ public class UsersExams {
             EnumType.STRING
     )
     private ExamStatus status;
-    private Date createdAt;
+//    private Date createdAt;
     @OneToMany(mappedBy = "usersExam")
     private Set<UsersExamsQuestions> questions = new HashSet<>();
 
@@ -40,8 +40,8 @@ public class UsersExams {
         this.status = status;
     }
 
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = new Date();
-    }
+//    @PrePersist
+//    protected void onCreate() {
+//        this.createdAt = new Date();
+//    }
 }
