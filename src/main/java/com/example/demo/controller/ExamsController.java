@@ -7,6 +7,8 @@ import com.example.demo.service.impl.ExamsServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @AllArgsConstructor
 @CrossOrigin()
@@ -55,7 +57,8 @@ public class ExamsController {
     @PostMapping("exams")
     public Object createExam(
             @RequestHeader("Authorization") String token,
-            @RequestBody CreateExam createExam
+            @RequestBody CreateExam createExam,
+            HttpServletResponse response
     ) {
         String[] strings = token.split(" ");
         if(strings.length != 2) {
@@ -63,6 +66,7 @@ public class ExamsController {
         }
         Object res = this.examsService.createExam(strings[1], createExam);
 
+        response.addHeader("Access-Control-Allow-Origin:", "*");
         return res;
     }
 

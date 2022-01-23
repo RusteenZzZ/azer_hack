@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.lang.Error;
 
 @RestController
@@ -38,10 +39,12 @@ public class UsersController {
 
     @PostMapping("/login")
     public Object login(
-            @RequestBody Login login
+            @RequestBody Login login,
+            HttpServletResponse response
     ) {
         Object res = this.usersService.loginUser(login);
 
+        response.addHeader("Access-Control-Allow-Origin:", "*");
         return res;
     }
 
