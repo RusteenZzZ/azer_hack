@@ -11,6 +11,7 @@ import java.lang.Error;
 @RestController
 @AllArgsConstructor
 //@CrossOrigin(origins = "https://azercell-2022.web.app")
+@CrossOrigin()
 public class UsersController {
 
     private final UsersServiceImpl usersService;
