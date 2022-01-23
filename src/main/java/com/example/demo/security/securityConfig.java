@@ -37,7 +37,7 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", new CorsConfiguration().applyPermitDefaultValues());
+        source.registerCorsConfiguration("https://azercell-2022.web.app", new CorsConfiguration().applyPermitDefaultValues());
         return source;
     }
 
