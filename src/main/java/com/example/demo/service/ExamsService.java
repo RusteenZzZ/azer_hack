@@ -14,5 +14,7 @@ public interface ExamsService {
 
     public Object getExamQuestions(Long usersExamId);
 
+    public Object getExamReview(Long usersExamsId);
+
     public Object submitExam(String token, Long usersExamId, ExamSubmission examSubmission);
 }

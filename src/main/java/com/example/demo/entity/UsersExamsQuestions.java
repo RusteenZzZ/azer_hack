@@ -14,6 +14,8 @@ public class UsersExamsQuestions {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String answer;
+    private Boolean isCorrect;
     @ManyToOne
     private UsersExams usersExam;
     @ManyToOne

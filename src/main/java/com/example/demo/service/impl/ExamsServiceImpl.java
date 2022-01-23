@@ -10,7 +10,6 @@ import com.example.demo.service.QuestionsService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.lang.Error;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -217,6 +216,48 @@ public class ExamsServiceImpl implements ExamsService {
         }
     }
 
+
+    @Override
+    public Object getExamReview(Long usersExamsId) {
+        try {
+            Optional<UsersExams> usersExam = this.usersExamsRepo.findById(usersExamsId);
+            if(usersExam.isEmpty()) {
+                System.out.printf("Could not find usersExam with such %s id%n", usersExamsId.toString());
+                return new ErrorMessage(String.format("Could not find usersExam with such %s id", usersExamsId.toString()));
+            }
+
+            List<QuestionReview> questionReviews = new ArrayList<>();
+
+            List<UsersExamsQuestions> usersExamsQuestions = this.usersExamsQuestionsRepo.findAll();
+            List<UsersExamsQuestions> usersExamsQuestionsByUsersExamId = usersExamsQuestions.stream()
+                    .filter(usersExamsQuestion -> usersExamsQuestion.getUsersExam().getId() == usersExamsId)
+                    .collect(Collectors.toList());
+
+            for(UsersExamsQuestions usersExamsQuestion: usersExamsQuestionsByUsersExamId) {
+                Questions question = this.questionsRepo.getById(usersExamsQuestion.getQuestion().getId());
+                questionReviews.add(
+                        new QuestionReview(
+                                question.getTitle(),
+                                question.getCategory().getId(),
+                                question.getCategory().getTitle(),
+                                question.getAnswer(),
+                                usersExamsQuestion.getAnswer(),
+                                usersExamsQuestion.getIsCorrect(),
+                                question.getSuggestion()
+                        )
+                );
+            }
+
+            return new ExamReview(
+                    usersExam.get().getScore(),
+                    questionReviews
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            return new ErrorMessage(e.toString());
+        }
+    }
+
     @Override
     public Object submitExam(String token, Long usersExamId, ExamSubmission examSubmission) {
         try {
@@ -237,14 +278,19 @@ public class ExamsServiceImpl implements ExamsService {
 
             List<QuestionReview> questionReviews = new ArrayList<>();
 
+            List<UsersExamsQuestions> usersExamsQuestions = this.usersExamsQuestionsRepo.findAll();
+            List<UsersExamsQuestions> usersExamsQuestionsByUsersExamId = usersExamsQuestions.stream()
+                    .filter(usersExamQuestion -> usersExamQuestion.getUsersExam().getId() == usersExamId)
+                    .collect(Collectors.toList());
+
             for(QuestionSubmission questionSubmission: examSubmission.getQuestionSubmissions()) {
-                Answers answer = new Answers();
                 QuestionReview questionReview = new QuestionReview();
                 Questions question = this.questionsRepo.getById(questionSubmission.getQuestionId());
                 coeffs += question.getCoefficient();
-                answer.setQuestion(question);
-                answer.setUser(user);
-                answer.setValue(questionSubmission.getAnswer());
+                UsersExamsQuestions usersExamQuestion = usersExamsQuestionsByUsersExamId.stream()
+                                .filter(usersExamsQuestion -> usersExamsQuestion.getQuestion().getId() == question.getId())
+                                .findFirst().orElse(null);
+                usersExamQuestion.setAnswer(questionSubmission.getAnswer());
 
                 questionReview.setAnswer(question.getAnswer());
                 questionReview.setGivenAnswer(questionSubmission.getAnswer());
@@ -258,7 +304,7 @@ public class ExamsServiceImpl implements ExamsService {
                         if(answers.length != chosenAnswers.length) {
                             score -= question.getPenalty();
                             questionReview.setIsCorrect(false);
-                            answer.setIsCorrect(false);
+                            usersExamQuestion.setIsCorrect(false);
                         } else {
                             Arrays.sort(answers);
                             Arrays.sort(chosenAnswers);
@@ -275,31 +321,30 @@ public class ExamsServiceImpl implements ExamsService {
                             if(isCorrect) {
                                 score += question.getCoefficient();
                                 questionReview.setIsCorrect(true);
-                                answer.setIsCorrect(true);
+                                usersExamQuestion.setIsCorrect(true);
                             }else {
                                 score -= question.getPenalty();
                                 questionReview.setIsCorrect(false);
-                                answer.setIsCorrect(false);
+                                usersExamQuestion.setIsCorrect(false);
                             }
                         }
                     } else {
                         if(questionSubmission.getAnswer().equals(question.getAnswer())) {
                             score += question.getCoefficient();
                             questionReview.setIsCorrect(true);
-                            answer.setIsCorrect(true);
+                            usersExamQuestion.setIsCorrect(true);
                         } else {
                             score -= question.getPenalty();
                             questionReview.setIsCorrect(false);
-                            answer.setIsCorrect(false);
+                            usersExamQuestion.setIsCorrect(false);
                         }
                     }
                 } else {
                     questionReview.setIsCorrect(false);
-                    answer.setIsCorrect(false);
+                    usersExamQuestion.setIsCorrect(false);
                 }
 
                 questionReviews.add(questionReview);
-                this.answersRepo.save(answer);
             }
 
             score = (score/coeffs) * 100F;
@@ -325,10 +370,7 @@ public class ExamsServiceImpl implements ExamsService {
 
             this.usersExamsRepo.save(usersExam.get());
 
-            return new ExamReview(
-                    score,
-                    questionReviews
-            );
+            return new SubmitSuccess(true);
         } catch (Exception e) {
             System.out.println(e);
             return new ErrorMessage(e.toString());

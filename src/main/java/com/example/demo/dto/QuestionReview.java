@@ -10,6 +10,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class QuestionReview {
+    private String title;
+    private Long categoryId;
+    private String categoryTitle;
     private String answer;
     private String givenAnswer;
     private Boolean isCorrect;

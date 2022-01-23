@@ -63,6 +63,15 @@ public class ExamsController {
         return res;
     }
 
+    @GetMapping("users-exams/{users_exams_id}/review")
+    public Object getExamReview(
+            @PathVariable("users_exams_id") Long usersExamsId
+    ) {
+        Object res = this.examsService.getExamReview(usersExamsId);
+
+        return res;
+    }
+
     @PatchMapping("exams/{users_exam_id}")
     public Object submitExam(
             @RequestHeader("Authorization") String token,
