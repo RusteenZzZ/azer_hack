@@ -240,6 +240,7 @@ public class ExamsServiceImpl implements ExamsService {
                                 question.getId(),
                                 question.getType().toString(),
                                 question.getTitle(),
+                                question.getOptions(),
                                 question.getCategory().getId(),
                                 question.getCategory().getTitle(),
                                 question.getAnswer(),

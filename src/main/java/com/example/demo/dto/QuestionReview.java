@@ -13,6 +13,7 @@ public class QuestionReview {
     private Long id;
     private String type;
     private String title;
+    private String options;
     private Long categoryId;
     private String categoryTitle;
     private String answer;
