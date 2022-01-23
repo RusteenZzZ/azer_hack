@@ -21,8 +21,6 @@ public class Users {
     private String password;
     private String token;
     @OneToMany(mappedBy = "user")
-    private Set<Answers> answers = new HashSet<>();
-    @OneToMany(mappedBy = "user")
     private Set<UsersExams> studentExams = new HashSet<>();
 
     public Users(String name, String email, String password) {

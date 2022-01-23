@@ -2,6 +2,7 @@ package com.example.demo.service.impl;
 
 import com.example.demo.dto.*;
 import com.example.demo.entity.*;
+import com.example.demo.enums.ExamDifficulty;
 import com.example.demo.enums.ExamStatus;
 import com.example.demo.enums.QuestionType;
 import com.example.demo.repository.*;
@@ -24,7 +25,7 @@ public class ExamsServiceImpl implements ExamsService {
     private final UsersExamsRepo usersExamsRepo;
     private final QuestionsRepo questionsRepo;
     private final UsersExamsQuestionsRepo usersExamsQuestionsRepo;
-    private final AnswersRepo answersRepo;
+    private final TopicsRepo topicsRepo;
 
     @Override
     public Object getExams() {
@@ -165,9 +166,25 @@ public class ExamsServiceImpl implements ExamsService {
                 return new ErrorMessage(String.format("Could not find user with %s such token", token));
             }
 
-            Exams exam = new Exams();
-            exam.setTitle(createExam.getTitle());
-            exam.setNumOfQuestions(createExam.getNumOfQuestion());
+            Optional<Topics> topic = this.topicsRepo.findById(createExam.getTopicId());
+            if(topic.isEmpty()) {
+                System.out.printf("Could not find a topic with such %s id\n", createExam.getTopicId());
+                return new ErrorMessage(String.format("Could not find a topic with such %s id", createExam.getTopicId()));
+            }
+
+            Exams exam = this.examsRepo.save(
+                    new Exams(
+                            createExam.getTitle(),
+                            createExam.getNumOfQuestions(),
+                            0,
+                            0F,
+                            0F,
+                            "Proposed to be personal...",
+                            ExamDifficulty.INTERMEDIATE,
+                            topic.get(),
+                            false
+                    )
+            );
 
             List<Questions> questions = this.questionsRepo.findAll();
             List<Questions> questionsByCategoryIds = questions.stream()
@@ -176,13 +193,15 @@ public class ExamsServiceImpl implements ExamsService {
 
             Collections.shuffle(questionsByCategoryIds);
 
-            UsersExams usersExam = new UsersExams(
-                    exam,
-                    user,
-                    ExamStatus.ONGOING
+            UsersExams usersExam = this.usersExamsRepo.save(
+                    new UsersExams(
+                            exam,
+                            user,
+                            ExamStatus.ONGOING
+                    )
             );
 
-            for(int i = 0; i < createExam.getNumOfQuestion(); i++) {
+            for(int i = 0; i < createExam.getNumOfQuestions(); i++) {
                 Questions question = questionsByCategoryIds.get(i);
                 this.usersExamsQuestionsRepo.save(
                         new UsersExamsQuestions(

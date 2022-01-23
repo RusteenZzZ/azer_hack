@@ -13,6 +13,7 @@ import java.util.List;
 @Setter
 public class CreateExam {
     private String title;
-    private Integer numOfQuestion;
+    private Integer numOfQuestions;
+    private Long topicId;
     private List<Long> categoryIds;
 }
