@@ -34,12 +34,12 @@ public class securityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated();
     }
 
-    @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("https://azercell-2022.web.app", new CorsConfiguration().applyPermitDefaultValues());
-        return source;
-    }
+//    @Bean
+//    CorsConfigurationSource corsConfigurationSource() {
+//        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//        source.registerCorsConfiguration("https://azercell-2022.web.app", new CorsConfiguration().applyPermitDefaultValues());
+//        return source;
+//    }
 
 //    @Override
 //    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException, ServletException {
