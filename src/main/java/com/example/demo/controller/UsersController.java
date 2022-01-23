@@ -44,7 +44,7 @@ public class UsersController {
     ) {
         Object res = this.usersService.loginUser(login);
 
-        response.addHeader("Access-Control-Allow-Origin:", "*");
+        response.setHeader("Access-Control-Allow-Origin:", "*");
         return res;
     }
 
